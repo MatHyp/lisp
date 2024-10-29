@@ -1,4 +1,4 @@
-/home/mateuszkubuntu/Downloads/clion-2024.2.1/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/mateuszkubuntu/Downloads/clion-2024.2.1/bin/ninja/linux/x64/ninja -G Ninja -S /home/mateuszkubuntu/s/lisp -B /home/mateuszkubuntu/s/lisp/cmake-build-debug
+/home/mateuszkubuntu/Downloads/clion-2024.2.1/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /home/mateuszkubuntu/s/lisp -B /home/mateuszkubuntu/s/lisp/cmake-build-debug
 -- The C compiler identification is GNU 13.2.0
 -- The CXX compiler identification is GNU 13.2.0
 -- Detecting C compiler ABI info
@@ -11,6 +11,6 @@
 -- Check for working CXX compiler: /usr/bin/c++ - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Configuring done (0.5s)
+-- Configuring done (0.6s)
 -- Generating done (0.0s)
 -- Build files have been written to: /home/mateuszkubuntu/s/lisp/cmake-build-debug
