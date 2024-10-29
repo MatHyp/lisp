@@ -1,0 +1,3 @@
+/home/mateuszkubuntu/s/lisp/cmake-build-debug/CMakeFiles/lisp.dir
+/home/mateuszkubuntu/s/lisp/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/mateuszkubuntu/s/lisp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
