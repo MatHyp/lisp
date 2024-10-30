@@ -5,13 +5,12 @@
 
 int main()
 {
-    Tokenizer tokenizer("22000 + 3 - 10");
+    Tokenizer tokenizer("(- (+ 22000  3)  10)");
     vector<Tokenizer::Token> tokens = tokenizer.Tokenize();
+    auto treebuilder = TreeBuilder(tokens);
+    auto tree = treebuilder.BuildTree();
 
-    for (size_t i = 0; i < tokens.size(); i++)
-    {
-        cout << tokens[i].toString();
-    }
+    TreeBuilder::show(tree, 0);
 
     return 0;
 }
