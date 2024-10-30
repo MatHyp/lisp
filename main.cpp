@@ -52,7 +52,12 @@ float evaluateTree(TreeBuilder::Expression &tree){
 
 int main()
 {
-    Tokenizer tokenizer("(- 2 2 (+ 2 2))");
+
+    string user_input;
+
+    getline (std::cin,user_input);
+
+    Tokenizer tokenizer(user_input);
     vector<Tokenizer::Token> tokens = tokenizer.Tokenize();
     auto treebuilder = TreeBuilder(tokens);
     auto tree = treebuilder.BuildTree();
