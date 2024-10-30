@@ -51,11 +51,7 @@ public:
         }
     };
 
-<<<<<<< HEAD
     Tokenizer(const string &src) : _src(src) {}
-=======
-    Tokenizer(const string& src) : _src(src) {}
->>>>>>> c5dfa36d27908c1324d85be87cc72841afc5f8de
 
     vector<Token> Tokenize()
     {
@@ -79,19 +75,11 @@ private:
             return nullopt;
         }
 
-<<<<<<< HEAD
-=======
-        // Skip whitespace
->>>>>>> c5dfa36d27908c1324d85be87cc72841afc5f8de
         while (begin < _src.size() && isspace(_src[begin]))
         {
             ++begin;
         }
 
-<<<<<<< HEAD
-=======
-        // Reset `end` to `begin` at the start of each token
->>>>>>> c5dfa36d27908c1324d85be87cc72841afc5f8de
         end = begin;
 
         if (begin >= _src.size())
@@ -128,11 +116,7 @@ private:
                     ++end;
                 }
                 string numberStr = _src.substr(begin, end - begin);
-<<<<<<< HEAD
                 float number = stof(numberStr);
-=======
-                float number = stoi(numberStr);
->>>>>>> c5dfa36d27908c1324d85be87cc72841afc5f8de
 
                 // Move `begin` to the end of the parsed number
                 begin = end;
@@ -144,7 +128,6 @@ private:
 
     string _src;
     size_t begin = 0, end = 0;
-<<<<<<< HEAD
 };
 
 class TreeBuilder
@@ -199,7 +182,7 @@ public:
                 expressions.push_back(get<float>(tokens[i].value));
                 continue;
             case Tokenizer::TokenType::Closing_bracket:
-                return;
+                break;
             case Tokenizer::TokenType::Opening_bracket:
             {
             }
@@ -208,26 +191,16 @@ public:
             }
         }
     }
-=======
->>>>>>> c5dfa36d27908c1324d85be87cc72841afc5f8de
 };
 
 
 int main()
 {
-<<<<<<< HEAD
-
-    Tokenizer token("(+ 2200000002 10)");
-
-    vector<Tokenizer::Token> tokens = token.Tokenize();
-
-=======
 
     Tokenizer token("22000 + 3 - 10");
     vector<Tokenizer::Token> tokens = token.Tokenize();
     
->>>>>>> c5dfa36d27908c1324d85be87cc72841afc5f8de
-    for (int i = 0; i < tokens.size(); i++)
+    for (size_t i = 0; i < tokens.size(); i++)
     {
         cout << tokens[i].toString();
     }
