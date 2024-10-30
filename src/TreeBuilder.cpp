@@ -4,23 +4,17 @@
 
 TreeBuilder::TreeBuilder(vector<Tokenizer::Token> &tokens) : tokens(tokens) {}
 
-// TreeBuilder::Expression TreeBuilder::BuildTree()
-// {
-//     vector<variant<Expression, float>> expressions;
-
-// }
-
 TreeBuilder::Expression TreeBuilder::BuildTree()
 {
-    for (; token_index < tokens.size(); token_index++)
+    while (token_index < tokens.size())
     {
         switch (tokens[token_index].type)
         {
         case Tokenizer::TokenType::Opening_bracket:
         {
-
+            token_index++;
             Expression expr = {};
-            while (tokens[token_index].type != Tokenizer::TokenType::Closing_bracket)
+            while (token_index < tokens.size() && tokens[token_index].type != Tokenizer::TokenType::Closing_bracket)
             {
                 switch (tokens[token_index].type)
                 {
@@ -43,6 +37,8 @@ TreeBuilder::Expression TreeBuilder::BuildTree()
                     expr.args.push_back(BuildTree());
                     break;
                 }
+
+                token_index++;
             }
 
             return expr;
@@ -55,20 +51,20 @@ TreeBuilder::Expression TreeBuilder::BuildTree()
 void TreeBuilder::show(TreeBuilder::Expression &expr, int depth = 0)
 {
     for (int i = 0; i < depth; i++)
-        cout << " ";
+        cout << "     ";
     switch (expr.operation)
     {
     case Expression::OperationType::Add:
-        cout << "+";
+        cout << "+" << endl;
         break;
     case Expression::OperationType::Sub:
-        cout << "-";
+        cout << "-" << endl;
         break;
     case Expression::OperationType::Div:
-        cout << "/";
+        cout << "/" << endl;
         break;
     case Expression::OperationType::Mul:
-        cout << "*";
+        cout << "*" << endl;
         break;
     }
     for (auto arg : expr.args)
@@ -80,7 +76,7 @@ void TreeBuilder::show(TreeBuilder::Expression &expr, int depth = 0)
             break;
         case 1:
             for (int i = 0; i < depth; i++)
-                cout << " ";
+                cout << "     ";
             cout << get<float>(arg) << endl;
             break;
         }

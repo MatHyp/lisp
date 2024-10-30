@@ -10,7 +10,6 @@ vector<Tokenizer::Token> Tokenizer::Tokenize()
 
     while ((token = nextToken()).has_value())
     {
-        cout << token->toString() << endl;
         tokens.push_back(token.value());
     }
 

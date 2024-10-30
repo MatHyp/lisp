@@ -20,7 +20,7 @@ private:
     };
     vector<Tokenizer::Token> &tokens;
     Expression expr = {};
-    uint32_t token_index = 0;
+    int32_t token_index = 0;
 
 public:
     TreeBuilder(vector<Tokenizer::Token> &tokens);

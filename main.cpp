@@ -5,7 +5,7 @@
 
 int main()
 {
-    Tokenizer tokenizer("(- (+ 22000  3)  10)");
+    Tokenizer tokenizer("(- (+ 22000  3 (- 100 3 ) 10)");
     vector<Tokenizer::Token> tokens = tokenizer.Tokenize();
     auto treebuilder = TreeBuilder(tokens);
     auto tree = treebuilder.BuildTree();
