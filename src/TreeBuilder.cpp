@@ -8,9 +8,7 @@ TreeBuilder::Expression TreeBuilder::BuildTree()
 {
     while (token_index < tokens.size())
     {
-        switch (tokens[token_index].type)
-        {
-        case Tokenizer::TokenType::Opening_bracket:
+        if (tokens[token_index].type == Tokenizer::TokenType::Opening_bracket)
         {
             token_index++;
             Expression expr = {};
@@ -37,12 +35,11 @@ TreeBuilder::Expression TreeBuilder::BuildTree()
                     expr.args.push_back(BuildTree());
                     break;
                 }
-
+                
                 token_index++;
             }
 
             return expr;
-        }
         }
     }
     return {};

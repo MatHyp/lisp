@@ -3,14 +3,61 @@
 #include "src/TreeBuilder.h"
 #include <iostream>
 
+typedef TreeBuilder::Expression::OperationType OperationType;
+
+float evaluateTree(TreeBuilder::Expression &tree){
+    float result = 0;
+    switch(tree.operation){
+        case OperationType::Add:
+            for(auto arg : tree.args){
+                if(arg.index() == 1){
+                    result += get<float>(arg);
+                }else{
+                    result += evaluateTree(get<TreeBuilder::Expression>(arg));
+                }
+            }
+            break;
+            case OperationType::Sub:
+                for(auto arg : tree.args){
+                    if(arg.index() == 1){
+                        result -= get<float>(arg);
+                    }else{
+                        result -= evaluateTree(get<TreeBuilder::Expression>(arg));
+                    }
+                }
+                break;
+            case OperationType::Mul:
+            for(auto arg : tree.args){
+                if(arg.index() == 1){
+                    result *= get<float>(arg);
+                }else{
+                    result *= evaluateTree(get<TreeBuilder::Expression>(arg));
+                }
+            }
+            break;
+            case OperationType::Div:
+            for(auto arg : tree.args){
+                if(arg.index() == 1){
+                    result /= get<float>(arg);
+                }else{
+                    result /= evaluateTree(get<TreeBuilder::Expression>(arg));
+                }
+            }
+            break;
+
+    }
+
+    return result;
+};
+
 int main()
 {
-    Tokenizer tokenizer("(- (+ 22000  3 (- 100 3 ) 10)");
+    Tokenizer tokenizer("(- 2 2 (+ 2 2))");
     vector<Tokenizer::Token> tokens = tokenizer.Tokenize();
     auto treebuilder = TreeBuilder(tokens);
     auto tree = treebuilder.BuildTree();
 
-    TreeBuilder::show(tree, 0);
-
+    
+    cout << evaluateTree(tree) << endl;
     return 0;
 }
