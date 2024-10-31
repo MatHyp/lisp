@@ -1,5 +1,5 @@
-
 // TreeBuilder.cpp
+
 #include "TreeBuilder.h"
 
 TreeBuilder::TreeBuilder(vector<Tokenizer::Token> &tokens) : tokens(tokens) {}
@@ -35,7 +35,7 @@ TreeBuilder::Expression TreeBuilder::BuildTree()
                     expr.args.push_back(BuildTree());
                     break;
                 }
-                
+
                 token_index++;
             }
 

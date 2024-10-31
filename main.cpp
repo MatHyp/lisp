@@ -53,16 +53,21 @@ float evaluateTree(TreeBuilder::Expression &tree){
 int main()
 {
 
-    string user_input;
+    string user_input = "fff \"fffff\" Func let (+ 12 (- 4  4) 5) ";
 
-    getline (std::cin,user_input);
+    // getline (std::cin,user_input);
 
     Tokenizer tokenizer(user_input);
     vector<Tokenizer::Token> tokens = tokenizer.Tokenize();
-    auto treebuilder = TreeBuilder(tokens);
-    auto tree = treebuilder.BuildTree();
+
+    for(auto token : tokens){
+        cout << token.toString() << endl;
+    }
+
+    // auto treebuilder = TreeBuilder(tokens);
+    // auto tree = treebuilder.BuildTree();
 
     
-    cout << evaluateTree(tree) << endl;
+    // cout << evaluateTree(tree) << endl;
     return 0;
 }

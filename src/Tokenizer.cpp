@@ -13,6 +13,7 @@ vector<Tokenizer::Token> Tokenizer::Tokenize()
         tokens.push_back(token.value());
     }
 
+    
     return tokens;
 }
 
@@ -54,7 +55,7 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
         return Token{TokenType::Multiply, {}};
     case '/':
         ++begin;
-        return Token{TokenType::Divide, {}};
+        return Token{TokenType::Divide, {}};        
     default:
         if (isdigit(_src[begin]))
         {
@@ -68,7 +69,49 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
             begin = end;
             return Token{TokenType::Number, number};
         }
+
+        if(_src.substr(begin, 3) == "let" && _src[begin + 3] == ' '){
+            begin += 3;
+            end += 3;
+            
+            return Token{TokenType::let,{}};
+        }
+        if(_src.substr(begin, 4) == "Func" && _src[begin + 4] == ' '){
+            begin += 4;
+            end += 4;
+            
+            return Token{TokenType::Func,{}};
+        }
+
+        if(_src[begin] == '"' ){
+            end++;
+            while (_src[end] != '"')
+            {
+                ++end;
+            }
+            
+            string str = _src.substr(begin + 1, (end - begin) - 1);
+            
+            end++;
+            begin = end;
+            return Token{TokenType::String, str};
+        }
+        if (isalpha(_src[begin])){
+                end++;
+                while (_src[end] != ' ' && _src[end] != ')')
+                {
+                    ++end;
+                }
+                
+                string str = _src.substr(begin, (end - begin));
+                
+                end++;
+                begin = end;
+                return Token{TokenType::Identifier, str};
+            }
+            
         return nullopt;
+
     }
 }
 
@@ -90,6 +133,14 @@ string Tokenizer::Token::toString() const
         return "/";
     case TokenType::Number:
         return to_string(get<float>(value));
+    case TokenType::let:
+        return "let";
+    case TokenType::String:
+        return "string";
+    case TokenType::Func:
+        return "Func";
+    case TokenType::Identifier:
+        return "Identifier";
     }
     return "";
 }

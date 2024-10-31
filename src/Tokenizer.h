@@ -21,9 +21,13 @@ public:
         Multiply,
         Divide,
         Number,
+        Identifier,
+        String,
+        let,
+        Func,
     };
 
-    using TokenValue = variant<monostate, float>;
+    using TokenValue = variant<monostate, float, string>;
 
     struct Token
     {
