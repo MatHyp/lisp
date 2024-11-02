@@ -72,7 +72,7 @@ int main()
 
     // string user_input = "fff \"fffff\" Func let (+ 12 (- 4  4) 5) ";
 
-    string user_input = "(Func (add x y) (+ x y))";
+    string user_input = "(Func (add x y) .233 (+ x y))";
 
     // getline (std::cin,user_input);
 

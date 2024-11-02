@@ -57,9 +57,9 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
         ++begin;
         return Token{TokenType::Divide, {}};
     default:
-        if (isdigit(_src[begin]))
+        if (isdigit(_src[begin]) || _src[begin] == '.')
         {
-            while (end < _src.size() && isdigit(_src[end]))
+            while (end < _src.size() && (isdigit(_src[end]) || _src[end] == '.'))
             {
                 ++end;
             }
