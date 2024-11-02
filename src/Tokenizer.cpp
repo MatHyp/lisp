@@ -1,5 +1,6 @@
 // Tokenizer.cpp
 #include "Tokenizer.h"
+#include "log.hpp"
 
 Tokenizer::Tokenizer(const string &src) : _src(src) {}
 
@@ -101,15 +102,17 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
         if (isalpha(_src[begin]))
         {
             end++;
-            while (_src[end + 2] != ' ' && _src[end + 1] != ')')
+            while (_src.length() >= (end + 1))
             {
-
+                if (_src[end] == ' ' || _src[end] == ')')
+                {
+                    break;
+                }
                 ++end;
             }
 
             string str = _src.substr(begin, (end - begin));
 
-            end++;
             begin = end;
             return Token{TokenType::Identifier, str};
         }
@@ -143,7 +146,7 @@ string Tokenizer::Token::toString() const
     case TokenType::Func:
         return "Func";
     case TokenType::Identifier:
-        return "Identifier";
+        return "Identifier " + get<string>(value);
     }
     return "";
 }
