@@ -52,6 +52,8 @@ BaseType::~BaseType()
 {
     switch (this->i)
     {
+    case Index::None:
+        break;
     case Index::Operation:
     case Index::Number:
         break;
@@ -61,10 +63,12 @@ BaseType::~BaseType()
     {
         auto s = std::move(this->d.s);
     }
+    break;
     case Index::List:
     {
         auto s = std::move(this->d.l);
     }
+    break;
     default:
         LOG("Co ja robie tuu?");
         abort();

@@ -42,7 +42,7 @@ struct BaseType
     };
 
     Data d;
-    Index i;
+    Index i = Index::None;
     BaseType();
     BaseType(Number num);
     BaseType(Operation op);
