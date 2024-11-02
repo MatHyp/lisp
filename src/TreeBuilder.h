@@ -1,23 +1,61 @@
 #pragma once
 #include "Tokenizer.h"
 #include <vector>
-#include <variant>
+
+enum class Operation
+{
+    Add,
+    Subtract,
+    Divide,
+    Multiply
+};
+typedef float Number;
+typedef string Identifier;
+typedef string String;
+typedef string Keyword;
+
+/// @brief this is very bad hack, dont write code that way ever again, unless necessary
+struct BaseType
+{
+
+    enum class Index
+    {
+        None,
+        Operation,
+        Number,
+        Identifier,
+        String,
+        Keyword,
+        List,
+    };
+
+    union Data
+    {
+        Operation op;
+        Number num;
+        Identifier id;
+        String s;
+        Keyword k;
+        vector<BaseType> l;
+        Data();
+        ~Data();
+    };
+
+    Data d;
+    Index i;
+    BaseType();
+    BaseType(Number num);
+    BaseType(Operation op);
+    BaseType(vector<BaseType> l);
+    BaseType(string s, Index i);
+    ~BaseType();
+    BaseType &BaseType::operator=(const BaseType &);
+};
 
 class TreeBuilder
 {
 public:
-    struct Expression
-    {
-        enum class OperationType
-        {
-            Add,
-            Sub,
-            Div,
-            Mul
-        };
-        OperationType operation;
-        vector<variant<Expression, float>> args;
-    };
+    using Expression = vector<BaseType>;
 
     TreeBuilder(vector<Tokenizer::Token> &tokens);
     Expression BuildTree();
