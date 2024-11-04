@@ -6,9 +6,12 @@
 using namespace std;
 
 using Number = float;
+using String = string;
+
 struct ExpressionNode
 {
-    std::variant<Number, Tokenizer::TokenType, std::vector<ExpressionNode>> value;
+    std::variant<Number, String, std::vector<ExpressionNode>, monostate> value;
+    Tokenizer::TokenType type;
 };
 
 using Expression = std::vector<ExpressionNode>;

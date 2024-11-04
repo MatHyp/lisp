@@ -14,8 +14,8 @@ class Tokenizer
 public:
     enum class TokenType
     {
-        Opening_bracket,
-        Closing_bracket,
+        Opening_bracket, // 0
+        Closing_bracket, //(Func (add x y) 233 Func (ff x y))
         Plus,
         Minus,
         Multiply,

@@ -73,11 +73,27 @@ int main()
     string user_input = "(Func (add x y) 233 Func (ff x y))";
 
     Tokenizer tokenizer(user_input);
+
     vector<Tokenizer::Token> tokens = tokenizer.Tokenize();
+    for(auto token : tokens){
+        cout << token.toString() << endl ;
+    }
+
+
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
 
     auto treebuilder = TreeBuilder(tokens);
     auto tree = treebuilder.BuildTree();
-
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
     treebuilder.show(tree);
 
     return 0;

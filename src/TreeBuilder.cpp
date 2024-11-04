@@ -15,37 +15,55 @@ Expression TreeBuilder::BuildTree()
             while (token_index < tokens.size() && tokens[token_index].type != Tokenizer::TokenType::Closing_bracket)
             {
                 ExpressionNode node;
+             
+                LOG( static_cast<int>(tokens[token_index].type));
                 switch (tokens[token_index].type)
                 {
                 case Tokenizer::TokenType::Opening_bracket:
-                    node.value = BuildTree();
+                    node = ExpressionNode{BuildTree(), tokens[token_index].type};    
+                    
+            
+
                     break;
                 case Tokenizer::TokenType::Func:
-                    node.value = tokens[token_index].type;
+                
+                    node = ExpressionNode{monostate{}, Tokenizer::TokenType::Func};    
                     break;
                 case Tokenizer::TokenType::let:
-                    node.value = tokens[token_index].type;
+                    node = ExpressionNode{monostate{}, tokens[token_index].type};    
+
                     break;
                 case Tokenizer::TokenType::Identifier:
-                    node.value = tokens[token_index].type;
+                    node = ExpressionNode{get<String>(tokens[token_index].value), tokens[token_index].type};    
+
                     break;
                 case Tokenizer::TokenType::String:
-                    node.value = tokens[token_index].type;
+                
+                    node = ExpressionNode{get<String>(tokens[token_index].value), tokens[token_index].type};    
+                
                     break;
                 case Tokenizer::TokenType::Number:
-                    node.value = get<float>(tokens[token_index].value);
+                    
+                    node = ExpressionNode{get<float>(tokens[token_index].value), tokens[token_index].type};    
+
                     break;
                 case Tokenizer::TokenType::Plus:
-                    node.value = tokens[token_index].type;
+                    
+                    node = ExpressionNode{monostate{}, tokens[token_index].type};    
+
                     break;
                 case Tokenizer::TokenType::Minus:
-                    node.value = tokens[token_index].type;
+                    node = ExpressionNode{monostate{}, tokens[token_index].type};    
+                    
                     break;
                 case Tokenizer::TokenType::Multiply:
-                    node.value = tokens[token_index].type;
+                    node = ExpressionNode{monostate{}, tokens[token_index].type};    
+                    
                     break;
                 case Tokenizer::TokenType::Divide:
-                    node.value = tokens[token_index].type;
+                    
+                    
+                    node = ExpressionNode{monostate{}, tokens[token_index].type};    
                     break;
                 default:
                     break;
@@ -72,12 +90,8 @@ void TreeBuilder::show(Expression &expr, int depth)
     {
         switch (arg.value.index())
         {
-        case 2:
 
-            show(get<std::vector<ExpressionNode>>(arg.value), depth + 1);
-
-            break;
-        case 0: // float
+         case 0: // float
             for (int i = 0; i < depth; i++)
                 cout << "     ";
             cout << "Typ Float " << get<float>(arg.value) << endl;
@@ -86,9 +100,17 @@ void TreeBuilder::show(Expression &expr, int depth)
         case 1:
             for (int i = 0; i < depth; i++)
                 cout << "     ";
-            cout << "Typ inny (func etc)" << endl;
+            
 
+            cout << (arg.type == Tokenizer::TokenType::Identifier ? "Identyfikator" : "String") << "  " << get<string>(arg.value) << endl;  
             break;
+        case 2:
+            show(get<std::vector<ExpressionNode>>(arg.value), depth + 1);
+            break;
+        case 3:
+            cout << static_cast<int>(arg.type) << endl;
+            break;
+       
         default:
             cerr << "Unexpected variant index in ExpressionNode" << endl;
         }
