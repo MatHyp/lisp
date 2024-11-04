@@ -1,68 +1,27 @@
 #pragma once
 #include "Tokenizer.h"
 #include <vector>
+#include <variant>
 
-enum class Operation
+using namespace std;
+
+using Number = float;
+struct ExpressionNode
 {
-    Add,
-    Subtract,
-    Divide,
-    Multiply
+    std::variant<Number, Tokenizer::TokenType, std::vector<ExpressionNode>> value;
 };
-typedef float Number;
-typedef string Identifier;
-typedef string String;
-typedef string Keyword;
 
-/// @brief this is very bad hack, dont write code that way ever again, unless necessary
-struct BaseType
-{
-
-    enum class Index
-    {
-        None,
-        Operation,
-        Number,
-        Identifier,
-        String,
-        Keyword,
-        List,
-    };
-
-    union Data
-    {
-        Operation op;
-        Number num;
-        Identifier id;
-        String s;
-        Keyword k;
-        vector<BaseType> l;
-        Data();
-        ~Data();
-    };
-
-    Data d;
-    Index i = Index::None;
-    BaseType();
-    BaseType(Number num);
-    BaseType(Operation op);
-    BaseType(vector<BaseType> l);
-    BaseType(string s, Index i);
-    ~BaseType();
-    BaseType &BaseType::operator=(const BaseType &);
-};
+using Expression = std::vector<ExpressionNode>;
 
 class TreeBuilder
 {
 public:
-    using Expression = vector<BaseType>;
-
     TreeBuilder(vector<Tokenizer::Token> &tokens);
     Expression BuildTree();
-    static void show(Expression &expr, int depth);
+    static void show(Expression &expr, int depth = 0);
 
 private:
     vector<Tokenizer::Token> &tokens;
-    Expression expr = {};
-    int32_t token_index = 0;
+    int32_t token_index = 0; // Index for tracking token position
+
 };
