@@ -14,6 +14,8 @@ struct ExpressionNode
     Tokenizer::TokenType type;
 };
 
+ostream &operator<<(ostream &os, const ExpressionNode &);
+
 using Expression = std::vector<ExpressionNode>;
 
 class TreeBuilder
@@ -26,5 +28,4 @@ public:
 private:
     vector<Tokenizer::Token> &tokens;
     int32_t token_index = 0; // Index for tracking token position
-
 };

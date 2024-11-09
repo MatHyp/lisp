@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++17 -I./src -g
+CXXFLAGS = -Wall -Wextra -std=c++17 -I./src -g -w
 
 # Target executable
 TARGET = my_program
