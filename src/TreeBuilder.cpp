@@ -27,7 +27,7 @@ Expression TreeBuilder::BuildTree()
 
                     node = ExpressionNode{monostate{}, Tokenizer::TokenType::Func};
                     break;
-                case Tokenizer::TokenType::let:
+                case Tokenizer::TokenType::set:
                     node = ExpressionNode{monostate{}, tokens[token_index].type};
 
                     break;
@@ -110,8 +110,8 @@ ostream &operator<<(ostream &os, const ExpressionNode &expr)
         case Tokenizer::TokenType::Minus:
             os << "operator: -";
             break;
-        case Tokenizer::TokenType::let:
-            os << "declaration: let";
+        case Tokenizer::TokenType::set:
+            os << "declaration: set";
             break;
         case Tokenizer::TokenType::Func:
             os << "declaration: func";

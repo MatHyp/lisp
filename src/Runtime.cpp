@@ -3,10 +3,19 @@
 // tam gdzie jest assert to program w założeniu ma przestać sie interpretować
 // tam gdzie jest abort to trzeba kodu dopisać
 
-ExpressionNode evaluate(ExpressionNode &expr)
+RunTime::RunTime(Expression &expr) : expr(expr) {}
+
+ExpressionNode RunTime::evaluate(ExpressionNode &expr)
 {
     if (expr.value.index() != 2)
     {
+        if (expr.value.index() == 1 && expr.type == Tokenizer::TokenType::Identifier)
+        {
+            assert(variables.count(get<string>(expr.value)) != 0);
+
+            return variables.at(get<string>(expr.value));
+        }
+
         return expr;
     }
 
@@ -146,13 +155,20 @@ ExpressionNode evaluate(ExpressionNode &expr)
         return ExpressionNode{.value = div, .type = Tokenizer::TokenType::Number};
     }
     break;
-    case Tokenizer::TokenType::let:
-        cout << "let not implemented" << endl;
-        abort();
+    case Tokenizer::TokenType::set:
+
+        assert(vec[1].value.index() == 1 && vec[1].type == Tokenizer::TokenType::Identifier);
+        assert(vec.size() == 3);
+
+        variables[get<string>(vec[1].value)] = evaluate(vec[2]);
+
+        return evaluate(vec[2]);
+        break;
 
     case Tokenizer::TokenType::Func:
         cout << "Func not implemented" << endl;
         abort();
+        break;
 
     default:
         assert(!"This is not supposed to happen!");

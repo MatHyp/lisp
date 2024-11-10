@@ -70,12 +70,12 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
             return Token{TokenType::Number, number};
         }
 
-        if (_src.substr(begin, 3) == "let" && _src[begin + 3] == ' ')
+        if (_src.substr(begin, 3) == "set" && _src[begin + 3] == ' ')
         {
             begin += 3;
             end += 3;
 
-            return Token{TokenType::let, {}};
+            return Token{TokenType::set, {}};
         }
         if (_src.substr(begin, 4) == "Func" && _src[begin + 4] == ' ')
         {
@@ -139,8 +139,8 @@ string Tokenizer::Token::toString() const
         return "/";
     case TokenType::Number:
         return to_string(get<float>(value));
-    case TokenType::let:
-        return "let";
+    case TokenType::set:
+        return "set";
     case TokenType::String:
         return "string";
     case TokenType::Func:

@@ -23,7 +23,7 @@ public:
         Number,
         Identifier,
         String,
-        let,
+        set,
         Func,
     };
 

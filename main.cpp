@@ -5,12 +5,10 @@
 
 #include <iostream>
 
-
-
 int main()
 {
 
-    string user_input = "(- (/ 38 (+ 4 (* 5 3))) 3 )";
+    string user_input = "((set test \"dds\" ) test 3)";
 
     Tokenizer tokenizer(user_input);
 
@@ -19,8 +17,9 @@ int main()
     auto treebuilder = TreeBuilder(tokens);
     auto tree = treebuilder.BuildTree();
 
-    auto expr = ExpressionNode{.value = tree};
-    cout << expr << endl;
-    cout << evaluate(expr) << endl;
+    RunTime runExpr(tree);
+
+    runExpr.run();
+
     return 0;
 }
