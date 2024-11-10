@@ -8,7 +8,10 @@
 int main()
 {
 
-    string user_input = "((set test \"dds\" ) test 3)";
+    // string user_input = "(- set zmienna 33 (- zmienna 10) )";
+    // string user_input = "((set test 322) test 3)";
+
+    string user_input = "((- 3 20 (+ 1 2 (set zmienna 23)) zmienna ))";
 
     Tokenizer tokenizer(user_input);
 

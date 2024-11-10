@@ -40,18 +40,19 @@ ExpressionNode RunTime::evaluate(ExpressionNode &expr)
         Number sum = 0;
         for (int i = 1; i < vec.size(); i++)
         {
-            auto item = vec[i].value;
+            auto item = evaluate(vec[i]);
+
             Number val;
-            if (item.index() == 2)
+            if (item.value.index() == 2)
             {
-                ExpressionNode sub_vec = ExpressionNode{.value = item};
+                ExpressionNode sub_vec = item;
                 auto temp = evaluate(sub_vec);
                 assert(temp.value.index() == 0);
                 val = get<Number>(temp.value);
             }
-            else if (item.index() == 0)
+            else if (item.value.index() == 0)
             {
-                val = get<Number>(item);
+                val = get<Number>(item.value);
             }
             else
             {
@@ -64,25 +65,26 @@ ExpressionNode RunTime::evaluate(ExpressionNode &expr)
     break;
     case Tokenizer::TokenType::Multiply:
     {
-        Number mul = 1;
+        Number mul = 0;
         for (int i = 1; i < vec.size(); i++)
         {
-            auto item = vec[i].value;
+            auto item = evaluate(vec[i]);
+
             Number val;
-            if (item.index() == 2)
+            if (item.value.index() == 2)
             {
-                ExpressionNode sub_vec = ExpressionNode{.value = item};
+                ExpressionNode sub_vec = item;
                 auto temp = evaluate(sub_vec);
                 assert(temp.value.index() == 0);
                 val = get<Number>(temp.value);
             }
-            else if (item.index() == 0)
+            else if (item.value.index() == 0)
             {
-                val = get<Number>(item);
+                val = get<Number>(item.value);
             }
             else
             {
-                assert(!"type is not number!");
+                assert(!"Type is not number!");
             }
             mul *= val;
         }
@@ -100,18 +102,18 @@ ExpressionNode RunTime::evaluate(ExpressionNode &expr)
 
         for (int i = 2; i < vec.size(); i++)
         {
-            auto item = vec[i].value;
+            auto item = evaluate(vec[i]);
             Number val;
-            if (item.index() == 2)
+            if (item.value.index() == 2)
             {
-                ExpressionNode sub_vec = ExpressionNode{.value = item};
+                ExpressionNode sub_vec = item;
                 auto temp = evaluate(sub_vec);
                 assert(temp.value.index() == 0);
                 val = get<Number>(temp.value);
             }
-            else if (item.index() == 0)
+            else if (item.value.index() == 0)
             {
-                val = get<Number>(item);
+                val = get<Number>(item.value);
             }
             else
             {
@@ -127,24 +129,24 @@ ExpressionNode RunTime::evaluate(ExpressionNode &expr)
         assert(vec.size() >= 2);
         auto first = vec[1].value;
         assert(first.index() == 0 || first.index() == 2);
-        ExpressionNode div_val = ExpressionNode{.value = first};
-        auto temp = evaluate(div_val);
+        ExpressionNode diff_val = ExpressionNode{.value = first};
+        auto temp = evaluate(diff_val);
         Number div = get<Number>(temp.value);
 
         for (int i = 2; i < vec.size(); i++)
         {
-            auto item = vec[i].value;
+            auto item = evaluate(vec[i]);
             Number val;
-            if (item.index() == 2)
+            if (item.value.index() == 2)
             {
-                ExpressionNode sub_vec = ExpressionNode{.value = item};
+                ExpressionNode sub_vec = item;
                 auto temp = evaluate(sub_vec);
                 assert(temp.value.index() == 0);
                 val = get<Number>(temp.value);
             }
-            else if (item.index() == 0)
+            else if (item.value.index() == 0)
             {
-                val = get<Number>(item);
+                val = get<Number>(item.value);
             }
             else
             {

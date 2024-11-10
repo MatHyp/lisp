@@ -12,7 +12,6 @@ public:
 
     void run()
     {
-
         for (int i = 0; i < expr.size(); i++)
         {
             cout << this->evaluate(expr[i]) << endl;
