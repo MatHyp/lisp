@@ -44,18 +44,6 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
     case ')':
         ++begin;
         return Token{TokenType::Closing_bracket, {}};
-    case '+':
-        ++begin;
-        return Token{TokenType::Plus, {}};
-    case '-':
-        ++begin;
-        return Token{TokenType::Minus, {}};
-    case '*':
-        ++begin;
-        return Token{TokenType::Multiply, {}};
-    case '/':
-        ++begin;
-        return Token{TokenType::Divide, {}};
     default:
         if (isdigit(_src[begin]) || _src[begin] == '.')
         {
@@ -75,9 +63,9 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
             begin += 3;
             end += 3;
 
-            return Token{TokenType::set, {}};
+            return Token{TokenType::Set, {}};
         }
-        if (_src.substr(begin, 4) == "Func" && _src[begin + 4] == ' ')
+        if (_src.substr(begin, 4) == "func" && _src[begin + 4] == ' ')
         {
             begin += 4;
             end += 4;
@@ -99,25 +87,21 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
             begin = end;
             return Token{TokenType::String, str};
         }
-        if (isalpha(_src[begin]))
+
+        end++;
+        while (_src.length() >= (end + 1))
         {
-            end++;
-            while (_src.length() >= (end + 1))
+            if (_src[end] == ' ' || _src[end] == ')')
             {
-                if (_src[end] == ' ' || _src[end] == ')')
-                {
-                    break;
-                }
-                ++end;
+                break;
             }
-
-            string str = _src.substr(begin, (end - begin));
-
-            begin = end;
-            return Token{TokenType::Identifier, str};
+            ++end;
         }
 
-        return nullopt;
+        string str = _src.substr(begin, (end - begin));
+
+        begin = end;
+        return Token{TokenType::Identifier, str};
     }
 }
 
@@ -129,17 +113,9 @@ string Tokenizer::Token::toString() const
         return "(";
     case TokenType::Closing_bracket:
         return ")";
-    case TokenType::Plus:
-        return "+";
-    case TokenType::Minus:
-        return "-";
-    case TokenType::Multiply:
-        return "*";
-    case TokenType::Divide:
-        return "/";
     case TokenType::Number:
         return to_string(get<float>(value));
-    case TokenType::set:
+    case TokenType::Set:
         return "set";
     case TokenType::String:
         return "string";

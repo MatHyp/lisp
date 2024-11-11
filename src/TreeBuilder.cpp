@@ -27,7 +27,7 @@ Expression TreeBuilder::BuildTree()
 
                     node = ExpressionNode{monostate{}, Tokenizer::TokenType::Func};
                     break;
-                case Tokenizer::TokenType::set:
+                case Tokenizer::TokenType::Set:
                     node = ExpressionNode{monostate{}, tokens[token_index].type};
 
                     break;
@@ -44,23 +44,6 @@ Expression TreeBuilder::BuildTree()
 
                     node = ExpressionNode{get<float>(tokens[token_index].value), tokens[token_index].type};
 
-                    break;
-                case Tokenizer::TokenType::Plus:
-
-                    node = ExpressionNode{monostate{}, tokens[token_index].type};
-
-                    break;
-                case Tokenizer::TokenType::Minus:
-                    node = ExpressionNode{monostate{}, tokens[token_index].type};
-
-                    break;
-                case Tokenizer::TokenType::Multiply:
-                    node = ExpressionNode{monostate{}, tokens[token_index].type};
-
-                    break;
-                case Tokenizer::TokenType::Divide:
-
-                    node = ExpressionNode{monostate{}, tokens[token_index].type};
                     break;
                 default:
                     break;
@@ -98,19 +81,7 @@ ostream &operator<<(ostream &os, const ExpressionNode &expr)
     case 3:
         switch (expr.type)
         {
-        case Tokenizer::TokenType::Divide:
-            os << "operator: /";
-            break;
-        case Tokenizer::TokenType::Plus:
-            os << "operator: +";
-            break;
-        case Tokenizer::TokenType::Multiply:
-            os << "operator: *";
-            break;
-        case Tokenizer::TokenType::Minus:
-            os << "operator: -";
-            break;
-        case Tokenizer::TokenType::set:
+        case Tokenizer::TokenType::Set:
             os << "declaration: set";
             break;
         case Tokenizer::TokenType::Func:
@@ -144,7 +115,7 @@ void TreeBuilder::show(Expression &expr, int depth)
             for (int i = 0; i < depth; i++)
                 cout << "     ";
 
-            cout << (arg.type == Tokenizer::TokenType::Identifier ? "Identyfikator" : "String") << "  " << get<string>(arg.value) << endl;
+            cout << (arg.type == Tokenizer::TokenType::Identifier ? "Identifier" : "String") << "  " << get<string>(arg.value) << endl;
             break;
         case 2:
             show(get<std::vector<ExpressionNode>>(arg.value), depth + 1);
