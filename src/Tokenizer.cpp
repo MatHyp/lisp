@@ -57,7 +57,13 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
             begin = end;
             return Token{TokenType::Number, number};
         }
-
+        if (_src.substr(begin, 4) == "null" && _src[begin + 4] == ' ')
+        {
+            begin += 4;
+            end += 4;
+            
+            return Token{TokenType::Null, {}};
+        }
         if (_src.substr(begin, 3) == "set" && _src[begin + 3] == ' ')
         {
             begin += 3;
@@ -123,6 +129,8 @@ string Tokenizer::Token::toString() const
         return "Func";
     case TokenType::Identifier:
         return "Identifier " + get<string>(value);
+    case TokenType::Null:
+        return "null";
     }
     return "";
 }

@@ -10,15 +10,15 @@ int main()
     // string user_input = "(- set zmienna 33 (- zmienna 10) )";
     // string user_input = "((set test 322) test 3)";
 
-    string user_input = "((- 3 20 (+ 1 2 (set zmienna 23)) zmienna ))";
-    string s = R"""(
-        (func square (x) (* x x) )
-        (square 4)
-    )""";
+    string user_input = R"""(
+(func square (x) 
+    (* x x))
+(square 4)
+)""";
 
-    cout << s << endl;
+    string program = "(" + user_input + ")";
 
-    Tokenizer tokenizer(user_input);
+    Tokenizer tokenizer(program);
 
     vector<Tokenizer::Token> tokens = tokenizer.Tokenize();
 
@@ -26,10 +26,6 @@ int main()
     auto tree = treebuilder.BuildTree();
 
     cout << ExpressionNode{tree};
-
-    // RunTime runExpr(tree);
-
-    // runExpr.run();
 
     return 0;
 }

@@ -21,6 +21,7 @@ public:
         String,
         Set,
         Func,
+        Null,
     };
 
     using TokenValue = variant<monostate, float, string>;

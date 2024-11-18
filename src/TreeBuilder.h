@@ -8,10 +8,28 @@ using namespace std;
 using Number = float;
 using String = string;
 
+struct ExpressionNode;
+
+struct Func
+{
+    vector<string> args;
+    vector<ExpressionNode> instructions;
+};
+
 struct ExpressionNode
 {
-    std::variant<Number, String, std::vector<ExpressionNode>, monostate> value;
-    Tokenizer::TokenType type;
+    enum class Type
+    {
+        List,
+        Set,
+        Func,
+        Num,
+        Id,
+        Str,
+        Null
+    };
+    std::variant<Number, String, std::vector<ExpressionNode>, monostate, Func> value;
+    Type type;
 };
 
 ostream &operator<<(ostream &os, const ExpressionNode &);
