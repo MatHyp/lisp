@@ -7,11 +7,18 @@
 
 int main()
 {
+    // string user_input = R"""(
+    //         (
+    //         Func square () (
 
-    // string user_input = "(- set zmienna 33 (- zmienna 10) )";
-    // string user_input = "((set test 322) test 3)";
+    //         )
+    //         )""";
 
-    string user_input = "((- 3 20 (+ 1 2 (set zmienna 23)) zmienna ))";
+    // string program = "(" + user_input + ")";
+    // string user_input = "((- 3 20 (+ 1 2 (set zmienna 23)) zmienna ))";
+
+    // string user_input = "((+ (set zmienna 30)  (Func test () (+ 10 20 zmienna (+ 10 20))) test test zmienna (- 20 test)))";
+    string user_input = "((+ (set zmienna 30) 20 30 (- zmienna 20)))";
 
     Tokenizer tokenizer(user_input);
 
@@ -19,6 +26,8 @@ int main()
 
     auto treebuilder = TreeBuilder(tokens);
     auto tree = treebuilder.BuildTree();
+
+    cout << ExpressionNode{tree} << "\n -----------------------------" << endl;
 
     RunTime runExpr(tree);
 

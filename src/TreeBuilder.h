@@ -27,5 +27,5 @@ public:
 
 private:
     vector<Tokenizer::Token> &tokens;
-    int32_t token_index = 0; // Index for tracking token position
+    int32_t token_index = 0;
 };

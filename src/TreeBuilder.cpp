@@ -15,8 +15,6 @@ Expression TreeBuilder::BuildTree()
             while (token_index < tokens.size() && tokens[token_index].type != Tokenizer::TokenType::Closing_bracket)
             {
                 ExpressionNode node;
-
-                // LOG(static_cast<int>(tokens[token_index].type));
                 switch (tokens[token_index].type)
                 {
                 case Tokenizer::TokenType::Opening_bracket:
@@ -75,27 +73,38 @@ Expression TreeBuilder::BuildTree()
     }
     return {};
 }
-
-ostream &operator<<(ostream &os, const ExpressionNode &expr)
+ostream &printExpressionNode(ostream &os, const ExpressionNode &expr, int depth = 0)
 {
+    // Helper to add indentation based on the depth
+    auto indent = [&os, depth]()
+    {
+        os << std::string(depth * 4, ' '); // 4 spaces per depth level
+    };
+
+    indent(); // Apply current depth indentation
+
     switch (expr.value.index())
     {
-    case 0:
+    case 0: // Number
         os << "number: " << get<Number>(expr.value);
         break;
-    case 1:
+    case 1: // String or Identifier
         os << ((expr.type == Tokenizer::TokenType::String) ? "string: " : "identifier: ")
            << get<string>(expr.value);
         break;
-    case 2:
-        os << "( ";
-        for (auto &item : get<vector<ExpressionNode>>(expr.value))
+    case 2: // Nested Expression
+    {
+        os << "(\n"; // Opening for nested expression
+        for (const auto &item : get<vector<ExpressionNode>>(expr.value))
         {
-            os << item << " ";
+            printExpressionNode(os, item, depth + 1); // Recursively print with increased depth
+            os << "\n";
         }
-        os << " )";
+        indent();  // Close indentation
+        os << ")"; // Closing for nested expression
         break;
-    case 3:
+    }
+    case 3: // Operators and Declarations
         switch (expr.type)
         {
         case Tokenizer::TokenType::Divide:
@@ -116,45 +125,20 @@ ostream &operator<<(ostream &os, const ExpressionNode &expr)
         case Tokenizer::TokenType::Func:
             os << "declaration: func";
             break;
+        default:
+            os << "unknown operator or declaration";
+            break;
         }
         break;
+    default:
+        os << "unknown expression node";
+        break;
     }
+
     return os;
 }
 
-void TreeBuilder::show(Expression &expr, int depth)
+ostream &operator<<(ostream &os, const ExpressionNode &expr)
 {
-    if (expr.empty())
-    {
-        cout << "Expression is empty." << endl;
-        return;
-    }
-    for (auto &arg : expr)
-    {
-        switch (arg.value.index())
-        {
-
-        case 0: // float
-            for (int i = 0; i < depth; i++)
-                cout << "     ";
-            cout << "Typ Float " << get<float>(arg.value) << endl;
-
-            break;
-        case 1:
-            for (int i = 0; i < depth; i++)
-                cout << "     ";
-
-            cout << (arg.type == Tokenizer::TokenType::Identifier ? "Identyfikator" : "String") << "  " << get<string>(arg.value) << endl;
-            break;
-        case 2:
-            show(get<std::vector<ExpressionNode>>(arg.value), depth + 1);
-            break;
-        case 3:
-            cout << static_cast<int>(arg.type) << endl;
-            break;
-
-        default:
-            cerr << "Unexpected variant index in ExpressionNode" << endl;
-        }
-    }
+    return printExpressionNode(os, expr, 0); // Start with depth 0
 }
