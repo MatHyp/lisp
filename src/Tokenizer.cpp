@@ -57,6 +57,13 @@ optional<Tokenizer::Token> Tokenizer::nextToken()
         ++begin;
         return Token{TokenType::Divide, {}};
     default:
+        if (_src.substr(begin, 4) == "Null" && _src[begin + 4] == ' ')
+        {
+            begin += 4;
+            end += 4;
+
+            return Token{TokenType::Null, {}};
+        }
         if (isdigit(_src[begin]) || _src[begin] == '.')
         {
             while (end < _src.size() && (isdigit(_src[end]) || _src[end] == '.'))
@@ -145,6 +152,9 @@ string Tokenizer::Token::toString() const
         return "string";
     case TokenType::Func:
         return "Func";
+    case TokenType::Null:
+        return "Null";
+
     case TokenType::Identifier:
         return "Identifier " + get<string>(value);
     }

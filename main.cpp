@@ -14,11 +14,16 @@ int main()
     //         )
     //         )""";
 
-    // string program = "(" + user_input + ")";
     // string user_input = "((- 3 20 (+ 1 2 (set zmienna 23)) zmienna ))";
-
+    // string user_input = "((+ (set zmienna 30) 20 30 (- zmienna 20)))";
     // string user_input = "((+ (set zmienna 30)  (Func test () (+ 10 20 zmienna (+ 10 20))) test test zmienna (- 20 test)))";
-    string user_input = "((+ (set zmienna 30) 20 30 (- zmienna 20)))";
+
+    // string user_input = "(( (Func zmienna () (- 23 10) ) zmienna ))";
+    string user_input = "((/ 2 (set x 5) (set y 10) (* x y) ))";
+
+    // string user_input = "((+ 20 20 (/ 20 20)))";
+
+    // 3 - 20 - 3 - 23
 
     Tokenizer tokenizer(user_input);
 
@@ -27,7 +32,7 @@ int main()
     auto treebuilder = TreeBuilder(tokens);
     auto tree = treebuilder.BuildTree();
 
-    cout << ExpressionNode{tree} << "\n -----------------------------" << endl;
+    cout << ExpressionNode{tree};
 
     RunTime runExpr(tree);
 

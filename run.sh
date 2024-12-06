@@ -1,4 +1,7 @@
+clear
+
 clean="make clean"
+
 if [ -f my_program ]; then
     eval $clean
 fi 

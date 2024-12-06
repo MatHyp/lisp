@@ -25,6 +25,10 @@ Expression TreeBuilder::BuildTree()
 
                     node = ExpressionNode{monostate{}, Tokenizer::TokenType::Func};
                     break;
+                case Tokenizer::TokenType::Null:
+
+                    node = ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
+                    break;
                 case Tokenizer::TokenType::set:
                     node = ExpressionNode{monostate{}, tokens[token_index].type};
 
@@ -124,6 +128,9 @@ ostream &printExpressionNode(ostream &os, const ExpressionNode &expr, int depth 
             break;
         case Tokenizer::TokenType::Func:
             os << "declaration: func";
+            break;
+        case Tokenizer::TokenType::Null:
+            os << "null";
             break;
         default:
             os << "unknown operator or declaration";

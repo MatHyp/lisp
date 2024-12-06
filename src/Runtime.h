@@ -1,35 +1,28 @@
 #include "TreeBuilder.h"
 #include "Tokenizer.h"
 #include <map>
-#include <vector>
+
+// ExpressionNode evaluate(ExpressionNode &expr);
 
 class RunTime
 {
 public:
-    struct FuncStruct
-    {
-        ExpressionNode instructions;
-        ExpressionNode args;
-    };
-
     RunTime(Expression &expr);
     ExpressionNode evaluate(ExpressionNode &exprNode);
+    ExpressionNode handleSetOperation(vector<ExpressionNode> &vec);
 
-    void run();
+    void logError(const std::string &message); // Log error without breaking execution
+
+    void run()
+    {
+        for (size_t i = 0; i < expr.size(); i++)
+        {
+
+            cout << this->evaluate(expr[i]) << endl;
+        }
+    }
 
 private:
-    // Variables
-    Expression &expr;                        // Reference to the input expression tree
-    map<string, ExpressionNode> variables;   // Variable storage
-    map<string, FuncStruct> globalFunctions; // Function storage
-
-    // Helper Methods
-    Number evaluateNumber(const ExpressionNode &item);                                                         // Extract and evaluate a number
-    ExpressionNode evaluateNonVector(ExpressionNode &expr);                                                    // Handle non-vector (simple) expressions
-    ExpressionNode evaluateBinaryOperation(const vector<ExpressionNode> &vec, Tokenizer::TokenType operation); // Perform binary operations
-    ExpressionNode handleSetOperation(const vector<ExpressionNode> &vec);                                      // Handle variable assignment
-    void handleFunctionDefinition(const vector<ExpressionNode> &vec);                                          // Handle variables and funcions calls
-
-    // Error handling
-    void logError(const std::string &message); // Log error without breaking execution
+    Expression &expr;
+    map<string, ExpressionNode> variables;
 };
