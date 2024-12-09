@@ -1,6 +1,8 @@
 #include <cassert>
-#include "Runtime.h"
 #include <iostream>
+
+#include "Runtime.h"
+#include "FuncImpl.h"
 
 RunTime::RunTime(Expression &expr) : expr(expr) {}
 
@@ -31,8 +33,30 @@ Number RunTime::evaluateOperand(const ExpressionNode &node)
     return get<Number>(temp.value);
 }
 
+ExpressionNode RunTime::handleFunctionDefinition(vector<ExpressionNode> &vec)
+{
+    if (vec.size() <= 3)
+    {
+        logError("Function definition requires at least 4 elements.");
+        return ExpressionNode{monostate{}, Tokenizer::TokenType::Null}; // No contribution to result
+    }
+
+    if (vec[1].value.index() != 1 || vec[1].type != Tokenizer::TokenType::Identifier)
+    {
+        logError("Function definition requires a valid identifier.");
+        return ExpressionNode{monostate{}, Tokenizer::TokenType::Null}; // No contribution to result
+    }
+
+    // return evaluate(vec[2]);
+
+    FuncImpl function = FuncImpl(vec[2], vec[3]);
+    globalFunctions[get<string>(vec[1].value)] = function;
+
+    return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
+}
+
 // Handle `set` operations
-ExpressionNode RunTime::handleSetOperation(std::vector<ExpressionNode> &vec)
+ExpressionNode RunTime::handleSetOperation(const vector<ExpressionNode> &vec)
 {
     if (vec.size() != 3 || vec[0].type != Tokenizer::TokenType::set || vec[1].type != Tokenizer::TokenType::Identifier)
     {
@@ -46,8 +70,7 @@ ExpressionNode RunTime::handleSetOperation(std::vector<ExpressionNode> &vec)
         return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
     }
 
-    std::string varName = get<std::string>(vec[1].value);
-    variables[varName] = vec[2];
+    globalVariables[get<string>(vec[1].value)] = vec[2];
     return ExpressionNode{monostate{}, Tokenizer::TokenType::Null}; // No contribution to result
 }
 
@@ -161,14 +184,26 @@ ExpressionNode RunTime::evaluate(ExpressionNode &expr)
 {
     if (expr.value.index() != 2)
     {
+
         if (expr.value.index() == 1 && expr.type == Tokenizer::TokenType::Identifier)
         {
-            std::string varName = get<std::string>(expr.value);
-            if (variables.count(varName))
+            // Check global functions
+
+            if (globalFunctions.count(get<string>(expr.value)))
             {
-                return variables.at(varName);
+
+                // globalFunctions[get<string>(expr.value)].evaluateFunc(expr);
+
+                auto &funcImpl = globalFunctions[get<std::string>(expr.value)];
+                funcImpl.evaluateFunc(expr); // This
+                return evaluate(globalFunctions[get<string>(expr.value)].instructions);
             }
-            logError("Undefined variable: " + varName);
+
+            if (globalVariables.count(get<string>(expr.value)))
+            {
+                return globalVariables.at(get<string>(expr.value));
+            }
+            logError("Undefined variable: ");
             return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
         }
         return expr;
@@ -178,6 +213,10 @@ ExpressionNode RunTime::evaluate(ExpressionNode &expr)
     assert(!vec.empty());
 
     auto &fn = vec[0];
+
+    if (fn.type == Tokenizer::TokenType::Func)
+        return handleFunctionDefinition(vec);
+
     if (fn.type == Tokenizer::TokenType::set)
         return handleSetOperation(vec);
 
