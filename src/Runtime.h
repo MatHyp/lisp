@@ -3,25 +3,30 @@
 
 #include "TreeBuilder.h"
 #include "Tokenizer.h"
+#include "FuncImpl.h"
+
 #include <map>
+#include <memory>
+
+class FuncImpl;
 
 class RunTime
 {
 public:
     explicit RunTime(Expression &expr);
 
-    // Evaluate an expression node
     ExpressionNode evaluate(ExpressionNode &exprNode);
 
-    // Run all expressions in the tree
     void run();
 
 private:
     Expression &expr;
-    std::map<std::string, ExpressionNode> variables;
+    map<string, ExpressionNode> globalVariables;
+    map<string, FuncImpl> globalFunctions;
 
     // Core operations
-    ExpressionNode handleSetOperation(std::vector<ExpressionNode> &vec);
+    ExpressionNode handleSetOperation(const vector<ExpressionNode> &vec);
+    ExpressionNode handleFunctionDefinition(vector<ExpressionNode> &vec);
     ExpressionNode handleArithmeticOperation(std::vector<ExpressionNode> &vec, Tokenizer::TokenType operationType);
 
     // Arithmetic helpers
@@ -35,4 +40,4 @@ private:
     void logError(const std::string &message);
 };
 
-#endif // RUNTIME_H
+#endif

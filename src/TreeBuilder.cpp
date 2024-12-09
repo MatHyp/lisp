@@ -23,7 +23,7 @@ Expression TreeBuilder::BuildTree()
                     break;
                 case Tokenizer::TokenType::Func:
 
-                    node = ExpressionNode{monostate{}, Tokenizer::TokenType::Func};
+                    node = ExpressionNode{monostate{}, tokens[token_index].type};
                     break;
                 case Tokenizer::TokenType::Null:
 
