@@ -13,7 +13,7 @@ class FuncImpl;
 class RunTime
 {
 public:
-    explicit RunTime(Expression &expr);
+    RunTime(Expression &expr);
 
     ExpressionNode evaluate(ExpressionNode &exprNode);
 

@@ -1,10 +1,10 @@
 #ifndef FUNCIMPL_H
 #define FUNCIMPL_H
+#include <map>
+#include <string>
 
 #include "Runtime.h"
 #include "TreeBuilder.h"
-#include <map>
-#include <string>
 
 class FuncImpl
 {
@@ -19,7 +19,8 @@ public:
     std::map<string, ExpressionNode> localVariables;
     std::map<string, ExpressionNode> localFunctions;
 
-    ExpressionNode evaluateFunc(ExpressionNode &expr); // Accepts one argument
+    // ExpressionNode evaluateFunc(ExpressionNode &expr,map<string, ExpressionNode> &parentVariables, map<string, ExpressionNode> &parentFunctions );
+    ExpressionNode evaluateFunc(ExpressionNode &expr);
 
 private:
 };

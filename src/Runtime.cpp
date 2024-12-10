@@ -182,6 +182,7 @@ ExpressionNode RunTime::handleDivision(std::vector<ExpressionNode> &vec)
 // Main evaluation logic
 ExpressionNode RunTime::evaluate(ExpressionNode &expr)
 {
+
     if (expr.value.index() != 2)
     {
 
@@ -194,8 +195,9 @@ ExpressionNode RunTime::evaluate(ExpressionNode &expr)
 
                 // globalFunctions[get<string>(expr.value)].evaluateFunc(expr);
 
-                auto &funcImpl = globalFunctions[get<std::string>(expr.value)];
-                funcImpl.evaluateFunc(expr); // This
+                // auto &funcImpl = globalFunctions[get<std::string>(expr.value)];
+                // funcImpl.evaluateFunc(expr);
+
                 return evaluate(globalFunctions[get<string>(expr.value)].instructions);
             }
 

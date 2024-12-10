@@ -24,6 +24,8 @@ FuncImpl::FuncImpl() : args(), instructions() // Initialize members with default
 
 ExpressionNode FuncImpl::evaluateFunc(ExpressionNode &expr)
 {
-    cout << "CHUJJJ" << endl;
-    return this->instructions; // Modify as per your requirements
+
+    cout << "TEST" << endl;
+
+    return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
 }
