@@ -47,8 +47,6 @@ ExpressionNode RunTime::handleFunctionDefinition(vector<ExpressionNode> &vec)
         return ExpressionNode{monostate{}, Tokenizer::TokenType::Null}; // No contribution to result
     }
 
-    // return evaluate(vec[2]);
-
     FuncImpl function = FuncImpl(vec[2], vec[3]);
     globalFunctions[get<string>(vec[1].value)] = function;
 
@@ -180,52 +178,212 @@ ExpressionNode RunTime::handleDivision(std::vector<ExpressionNode> &vec)
 }
 
 // Main evaluation logic
+// ExpressionNode RunTime::evaluate(ExpressionNode &expr)
+// {
+
+//     if (expr.value.index() != 2)
+//     {
+//         if (expr.value.index() == 1 && expr.type == Tokenizer::TokenType::Identifier)
+//         {
+//             // Check global functions
+
+//             if (globalFunctions.count(get<string>(expr.value)))
+//             {
+
+//                 // globalFunctions[get<string>(expr.value)].evaluateFunc(expr);
+
+//                 // auto &funcImpl = globalFunctions[get<std::string>(expr.value)];
+//                 // funcImpl.evaluateFunc(expr);
+
+//                 return evaluate(globalFunctions[get<string>(expr.value)].instructions);
+//             }
+
+//             if (globalVariables.count(get<string>(expr.value)))
+//             {
+//                 return globalVariables.at(get<string>(expr.value));
+//             }
+//             logError("Undefined variable: ");
+//             return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
+//         }
+//         return expr;
+//     }
+
+//     auto &vec = get<std::vector<ExpressionNode>>(expr.value);
+//     assert(!vec.empty());
+
+//     auto &fn = vec[0];
+
+//     if (fn.type == Tokenizer::TokenType::Func)
+//         return handleFunctionDefinition(vec);
+
+//     if (fn.type == Tokenizer::TokenType::set)
+//         return handleSetOperation(vec);
+
+//     if (fn.type == Tokenizer::TokenType::Plus || fn.type == Tokenizer::TokenType::Multiply ||
+//         fn.type == Tokenizer::TokenType::Minus || fn.type == Tokenizer::TokenType::Divide)
+//         return handleArithmeticOperation(vec, fn.type);
+
+//     if (fn.type == Tokenizer::TokenType::Identifier)
+//     {
+//         std::string funcName = get<std::string>(fn.value);
+
+//         if (globalFunctions.count(funcName))
+//         {
+//             FuncImpl &func = globalFunctions[funcName];
+//             std::vector<ExpressionNode> evaluatedArgs;
+
+//             // Evaluate all arguments
+//             for (size_t i = 1; i < vec.size(); ++i)
+//             {
+//                 evaluatedArgs.push_back(evaluate(vec[i]));
+//             }
+
+//             // Handle scoping
+//             std::map<std::string, ExpressionNode> *previousLocals = currentLocals;
+//             currentLocals = &func.localVariables;
+
+//             // Bind arguments to parameters
+//             auto &params = get<std::vector<ExpressionNode>>(func.args.value);
+//             if (params.size() != evaluatedArgs.size())
+//             {
+//                 logError("Argument count mismatch for function " + funcName);
+//                 currentLocals = previousLocals;
+//                 return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
+//             }
+
+//             for (size_t i = 0; i < params.size(); ++i)
+//             {
+//                 std::string paramName = get<std::string>(params[i].value);
+//                 func.localVariables[paramName] = evaluatedArgs[i];
+//             }
+
+//             // Execute function body
+//             ExpressionNode result = evaluate(func.instructions);
+
+//             // Restore previous scope
+//             currentLocals = previousLocals;
+//             return result;
+//         }
+
+//         logError("Undefined function: " + funcName);
+//         return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
+//     }
+
+//     logError("Unknown operation.");
+//     return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
+// }
+
 ExpressionNode RunTime::evaluate(ExpressionNode &expr)
 {
-
+    // Handle atomic values (numbers/identifiers)
     if (expr.value.index() != 2)
     {
-
-        if (expr.value.index() == 1 && expr.type == Tokenizer::TokenType::Identifier)
+        if (expr.type == Tokenizer::TokenType::Identifier)
         {
-            // Check global functions
+            std::string name = get<std::string>(expr.value);
 
-            if (globalFunctions.count(get<string>(expr.value)))
+            // 1. Check local variables first
+            if (currentLocals)
             {
-
-                // globalFunctions[get<string>(expr.value)].evaluateFunc(expr);
-
-                // auto &funcImpl = globalFunctions[get<std::string>(expr.value)];
-                // funcImpl.evaluateFunc(expr);
-
-                return evaluate(globalFunctions[get<string>(expr.value)].instructions);
+                auto localIt = currentLocals->find(name);
+                if (localIt != currentLocals->end())
+                {
+                    return localIt->second;
+                }
             }
 
-            if (globalVariables.count(get<string>(expr.value)))
+            // 2. Check global functions
+            if (globalFunctions.count(name))
             {
-                return globalVariables.at(get<string>(expr.value));
+                // Return function reference directly
+                return expr;
             }
-            logError("Undefined variable: ");
+
+            // 3. Check global variables
+            if (globalVariables.count(name))
+            {
+                return globalVariables[name];
+            }
+
+            logError("Undefined identifier: " + name);
             return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
         }
-        return expr;
+        return expr; // Return literal values directly
     }
 
+    // Handle compound expressions (lists)
     auto &vec = get<std::vector<ExpressionNode>>(expr.value);
-    assert(!vec.empty());
+    if (vec.empty())
+    {
+        logError("Empty list expression");
+        return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
+    }
 
-    auto &fn = vec[0];
+    ExpressionNode &first = vec[0];
 
-    if (fn.type == Tokenizer::TokenType::Func)
+    // Handle special forms
+    if (first.type == Tokenizer::TokenType::Func)
+    {
         return handleFunctionDefinition(vec);
-
-    if (fn.type == Tokenizer::TokenType::set)
+    }
+    if (first.type == Tokenizer::TokenType::set)
+    {
         return handleSetOperation(vec);
+    }
 
-    if (fn.type == Tokenizer::TokenType::Plus || fn.type == Tokenizer::TokenType::Multiply ||
-        fn.type == Tokenizer::TokenType::Minus || fn.type == Tokenizer::TokenType::Divide)
-        return handleArithmeticOperation(vec, fn.type);
+    // Handle function calls
+    if (first.type == Tokenizer::TokenType::Identifier)
+    {
+        std::string funcName = get<std::string>(first.value);
 
-    logError("Unknown operation.");
+        if (globalFunctions.count(funcName))
+        {
+            FuncImpl &func = globalFunctions[funcName];
+            std::vector<ExpressionNode> evaluatedArgs;
+
+            // Evaluate all arguments
+            for (size_t i = 1; i < vec.size(); ++i)
+            {
+                evaluatedArgs.push_back(evaluate(vec[i]));
+            }
+
+            // Manage scoping
+            std::map<std::string, ExpressionNode> *prevLocals = currentLocals;
+            currentLocals = &func.localVariables;
+
+            // Bind parameters to arguments
+            auto &params = get<std::vector<ExpressionNode>>(func.args.value);
+            if (params.size() != evaluatedArgs.size())
+            {
+                logError("Argument count mismatch for " + funcName);
+                currentLocals = prevLocals;
+                return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
+            }
+
+            for (size_t i = 0; i < params.size(); ++i)
+            {
+                std::string paramName = get<std::string>(params[i].value);
+                func.localVariables[paramName] = evaluatedArgs[i];
+            }
+
+            // Evaluate function body
+            ExpressionNode result = evaluate(func.instructions);
+
+            // Restore previous scope
+            currentLocals = prevLocals;
+            return result;
+        }
+    }
+
+    // Handle arithmetic operations
+    if (first.type == Tokenizer::TokenType::Plus ||
+        first.type == Tokenizer::TokenType::Minus ||
+        first.type == Tokenizer::TokenType::Multiply ||
+        first.type == Tokenizer::TokenType::Divide)
+    {
+        return handleArithmeticOperation(vec, first.type);
+    }
+
+    logError("Unknown expression type");
     return ExpressionNode{monostate{}, Tokenizer::TokenType::Null};
 }

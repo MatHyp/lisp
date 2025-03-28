@@ -21,9 +21,11 @@ public:
 
 private:
     Expression &expr;
+
     map<string, ExpressionNode> globalVariables;
     map<string, FuncImpl> globalFunctions;
-
+    std::map<std::string, ExpressionNode> *currentLocals = nullptr;
+    std::vector<std::map<std::string, ExpressionNode> *> localsStack;
     // Core operations
     ExpressionNode handleSetOperation(const vector<ExpressionNode> &vec);
     ExpressionNode handleFunctionDefinition(vector<ExpressionNode> &vec);
