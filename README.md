@@ -10,18 +10,31 @@ This is a toy Lisp interpreter written in C++. It is a work in progress and serv
 - **Variables**: Stored in a hashmap for fast lookups.
 - **Functions**: Defined and stored as structured data in a hashmap.
 - **Basic Arithmetic**: Supports operations like `+`, `*`, etc.
+- **Variable Assignment**: Uses `set` to define and store variable values.
 
 ## Example Code Execution
 
 Given the following input:
 
 ```lisp
-((+ (Func pol (a b) (* (set test 10) test test test b)) (pol 10 10) (pol 10 10) ))
+((+ (set a 10) 
+    (set b 5) 
+    (Func square (x) (* x x)) 
+    (square a) 
+    (square b) 
+    (* a b) 
+))
 ```
 
-- `pol` is a function that takes two parameters (`a` and `b`).
-- It defines a local variable `test` and performs multiplication.
-- The function is invoked twice with values `(10, 10)`, and the results are summed.
+- `set a 10` assigns `10` to `a`.
+- `set b 5` assigns `5` to `b`.
+- Defines a function `square(x)` that returns `x * x`.
+- Calls `square(a)`, which evaluates to `100`.
+- Calls `square(b)`, which evaluates to `25`.
+- `(* a b)` multiplies `a` and `b`, resulting in `50`.
+- The final expression evaluates to `100 + 25 + 50 = 175`.
+
+This example demonstrates function definition, variable handling, and arithmetic operations using the interpreter.
 
 ## Project Structure
 
